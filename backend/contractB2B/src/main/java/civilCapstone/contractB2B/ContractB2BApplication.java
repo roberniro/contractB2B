@@ -1,4 +1,4 @@
-package com.dgu.civil.capstone.team1.contractB2B;
+package civilCapstone.contractB2B;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
