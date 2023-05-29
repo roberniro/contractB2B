@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 
 @Data
@@ -23,7 +24,9 @@ public class UserDto {
     private String password;
     private String companyName;
     private String nip;
-    private String address;
+    private String city;
+    private String district;
+    private String addressDetail;
     private String contact;
     private Role role;
 
@@ -44,13 +47,21 @@ public class UserDto {
         @Length(min = 2, max = 20, message = "사명은 2~20자리여야 합니다.")
         private String companyName;
 
-        @NotBlank(message = "사업자번호를 입력해주세요.")
+        @Null
         @Pattern(regexp = "^[0-9]{10}$", message = "사업자번호는 10자리여야 합니다.")
         private String nip;
 
-        @NotBlank(message = "주소를 입력해주세요.")
-        @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_\\s]{2,50}$", message = "주소는 특수문자를 제외한 2~50자리여야 합니다.")
-        private String address;
+        @NotBlank(message = "특별시/광역시/도를 입력해주세요.")
+        @Pattern(regexp = "^[ㄱ-ㅎ가-힣]{2,10}$", message = "특별시/광역시/도는 특수문자를 제외한 2~10자리여야 합니다.")
+        private String city;
+
+        @NotBlank(message = "시/군/구를 입력해주세요.")
+        @Pattern(regexp = "^[ㄱ-ㅎ가-힣]{2,10}$", message = "시군구는 특수문자를 제외한 2~10자리여야 합니다.")
+        private String district;
+
+        @NotBlank(message = "상세주소를 입력해주세요.")
+        @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_\\s]{2,50}$", message = "상세주소는 특수문자를 제외한 2~50자리여야 합니다.")
+        private String addressDetail;
 
         @NotBlank(message = "연락처를 입력해주세요.")
         @Pattern(regexp = "^[0-9]{10,11}$", message = "연락처는 10~11자리여야 합니다.")
@@ -78,9 +89,17 @@ public class UserDto {
         @Pattern(regexp = "^[0-9]{10}$", message = "사업자번호는 10자리여야 합니다.")
         private String nip;
 
-        @NotBlank(message = "주소를 입력해주세요.")
-        @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_\\s]{2,50}$", message = "주소는 특수문자를 제외한 2~50자리여야 합니다.")
-        private String address;
+        @NotBlank(message = "특별시/광역시/도를 입력해주세요.")
+        @Pattern(regexp = "^[ㄱ-ㅎ가-힣]{2,10}$", message = "특별시/광역시/도는 특수문자를 제외한 2~10자리여야 합니다.")
+        private String city;
+
+        @NotBlank(message = "시/군/구를 입력해주세요.")
+        @Pattern(regexp = "^[ㄱ-ㅎ가-힣]{2,10}$", message = "시군구는 특수문자를 제외한 2~10자리여야 합니다.")
+        private String district;
+
+        @NotBlank(message = "상세주소를 입력해주세요.")
+        @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_\\s]{2,50}$", message = "상세주소는 특수문자를 제외한 2~50자리여야 합니다.")
+        private String addressDetail;
 
         @NotBlank(message = "연락처를 입력해주세요.")
         @Pattern(regexp = "^[0-9]{10,11}$", message = "연락처는 10~11자리여야 합니다.")

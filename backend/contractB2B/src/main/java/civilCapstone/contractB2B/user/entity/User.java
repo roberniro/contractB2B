@@ -1,5 +1,6 @@
 package civilCapstone.contractB2B.user.entity;
 
+import civilCapstone.contractB2B.global.entity.Address;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Data
+@Getter
 @Table
 public class User {
     @Id
@@ -21,18 +22,24 @@ public class User {
 
     @Column(length = 100, nullable = false)
     private String password;
-    @Column(name = "name", length = 20, nullable = false)
-    private String companyName;
 
-    @Column(length = 10, nullable = false)
+    @Column(name = "name", length = 20, nullable = false)
+    private String name;
+
+    @Column(length = 10, nullable = true)
     private String nip;
 
-    @Column(length = 50, nullable = false)
-    private String address;
+    @JoinColumn(name = "address_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    private Address address;
 
     @Column(length = 11, nullable = false)
     private String contact;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }
