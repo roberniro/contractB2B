@@ -12,6 +12,6 @@ public class RoleValidator implements ConstraintValidator<ValidRole, Role> {
         if (value == null) {
             return true; // null values should be validated with @NotNull or @Nullable
         }
-        return EnumSet.of(Role.client, Role.contractor, Role.admin).contains(value);
+        return EnumSet.of(Role.CLIENT, Role.CITIZEN, Role.CONTRACTOR).contains(value);
     }
 }
