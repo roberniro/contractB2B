@@ -2,6 +2,7 @@ package civilCapstone.contractB2B.user.service;
 
 import civilCapstone.contractB2B.global.entity.Address;
 import civilCapstone.contractB2B.global.model.ResponseDto;
+import civilCapstone.contractB2B.user.entity.Role;
 import civilCapstone.contractB2B.user.model.UserDto;
 import civilCapstone.contractB2B.user.entity.User;
 import civilCapstone.contractB2B.user.repository.UserRepository;
@@ -28,20 +29,30 @@ public class UserJoinServiceImpl implements UserJoinService{
 
     @Override
     public ResponseEntity<?> getResponseEntity(UserDto.UserJoinRequestDto userDto) {
-        User user = User.builder()
-                .username(userDto.getUsername())
-                .password(encoder.encode(userDto.getPassword()))
-                .name(userDto.getCompanyName())
-                .nip(userDto.getNip())
-                .contact(userDto.getContact())
-                .role(userDto.getRole())
-                .build(); // UserDto -> User
-        Address address = Address.builder()
-                .city(userDto.getCity())
-                .district(userDto.getDistrict())
-                .addressDetail(userDto.getAddressDetail())
-                .build(); // UserDto -> Address
-        user.setAddress(address); // User에 Address 추가
+        User user = null;
+        if (userDto.getRole() == Role.CITIZEN) {
+            user = User.builder()
+                    .username(userDto.getUsername())
+                    .password(encoder.encode(userDto.getPassword()))
+                    .name(userDto.getName())
+                    .role(userDto.getRole())
+                    .build(); // UserDto -> User
+        } else {
+            user = User.builder()
+                    .username(userDto.getUsername())
+                    .password(encoder.encode(userDto.getPassword()))
+                    .name(userDto.getName())
+                    .nip(userDto.getNip())
+                    .contact(userDto.getContact())
+                    .role(userDto.getRole())
+                    .build(); // UserDto -> User
+            Address address = Address.builder()
+                    .city(userDto.getCity())
+                    .district(userDto.getDistrict())
+                    .addressDetail(userDto.getAddressDetail())
+                    .build(); // UserDto -> Address
+            user.setAddress(address); // User에 Address 추가
+        }
         User registerdUser; // 회원가입 처리 후 결과를 받음
         // 회원가입 처리
         try {
@@ -64,6 +75,15 @@ public class UserJoinServiceImpl implements UserJoinService{
     }
 
     private UserDto getResponseUserDto(User user) {
+        if (user.getRole() == Role.CITIZEN) {
+            UserDto responseUserDto = UserDto.builder()
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .companyName(user.getName())
+                    .role(user.getRole())
+                    .build();
+            return responseUserDto;
+        }
         UserDto responseUserDto = UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -97,10 +117,10 @@ public class UserJoinServiceImpl implements UserJoinService{
         if (user == null || user.getUsername() == null) {
             throw new IllegalArgumentException("유저 정보가 없습니다.");
         }
-        final String studentId = user.getUsername();
+        final String username = user.getUsername();
         // 중복 검사
-        if (userRepository.existsByUsername(studentId)) {
-            throw new IllegalArgumentException("이미 존재하는 학번입니다.");
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
         return userRepository.save(user);
     }

@@ -8,10 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 @Data
 @Builder
@@ -43,11 +40,11 @@ public class UserDto {
         @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
         private String password;
 
-        @NotBlank(message = "사명을 입력해주세요.")
-        @Length(min = 2, max = 20, message = "사명은 2~20자리여야 합니다.")
-        private String companyName;
+        @NotBlank(message = "사명/이름을 입력해주세요.")
+        @Length(min = 2, max = 20, message = "사명/이름은 2~20자리여야 합니다.")
+        private String name;
 
-        @Null
+        @NotBlank(message = "회사명을 입력해주세요.")
         @Pattern(regexp = "^[0-9]{10}$", message = "사업자번호는 10자리여야 합니다.")
         private String nip;
 
@@ -55,7 +52,7 @@ public class UserDto {
         @Pattern(regexp = "^[ㄱ-ㅎ가-힣]{2,10}$", message = "특별시/광역시/도는 특수문자를 제외한 2~10자리여야 합니다.")
         private String city;
 
-        @NotBlank(message = "시/군/구를 입력해주세요.")
+        @NotBlank(message = "시군구를 입력해주세요.")
         @Pattern(regexp = "^[ㄱ-ㅎ가-힣]{2,10}$", message = "시군구는 특수문자를 제외한 2~10자리여야 합니다.")
         private String district;
 
@@ -71,6 +68,7 @@ public class UserDto {
         @ValidRole(message = "권한을 선택해주세요.")
         private Role role;
     }
+
 
     @Data
     @Builder

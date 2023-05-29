@@ -1,6 +1,7 @@
 package civilCapstone.contractB2B.user.service;
 
 import civilCapstone.contractB2B.global.model.ResponseDto;
+import civilCapstone.contractB2B.user.entity.Role;
 import civilCapstone.contractB2B.user.model.UserDto;
 import civilCapstone.contractB2B.user.entity.User;
 import civilCapstone.contractB2B.user.repository.UserRepository;
@@ -27,7 +28,7 @@ public class UserLoginServiceImpl implements UserLoginService{
     public ResponseEntity<?> getResponseEntity(UserDto userDto) {
         User user = authenticateUsername(userDto.getUsername()); // username으로 사용자 찾기
         if (user == null) { // 유저가 없으면 에러
-            String message = " 올바르지 않습니다.";
+            String message = "ID가 올바르지 않습니다.";
             ResponseDto responseErrorDto = getResponseErrorDto(message);
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
@@ -50,6 +51,16 @@ public class UserLoginServiceImpl implements UserLoginService{
     }
 
     private UserDto getResponseUserDto(UserDto userDto, User user, String token) { // 유저 정보를 담은 dto 생성
+        if (user.getRole() == Role.CITIZEN) {
+            final UserDto responseUserDto = userDto.builder()
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .token(token)
+                    .companyName(user.getName())
+                    .role(user.getRole())
+                    .build();
+            return responseUserDto;
+        }
         final UserDto responseUserDto = userDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())

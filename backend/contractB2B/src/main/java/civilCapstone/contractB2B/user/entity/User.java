@@ -29,11 +29,11 @@ public class User {
     @Column(length = 10, nullable = true)
     private String nip;
 
-    @JoinColumn(name = "address_id", nullable = false)
+    @JoinColumn(name = "address_id", nullable = true)
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    @Column(length = 11, nullable = false)
+    @Column(length = 11, nullable = true)
     private String contact;
 
     @Enumerated(EnumType.STRING)

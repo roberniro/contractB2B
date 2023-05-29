@@ -36,14 +36,13 @@ public class UserModifyServiceImpl implements UserModifyService {
             ResponseDto responseErrorDto = getResponseErrorDto(e);
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
-        User user = User.builder()
+        User user = userRepository.findByUsername(username).get();
+        user = User.builder()
                 .id(id)
                 .username(username)
                 .password(encoder.encode(userDto.getPassword()))
                 .name(userDto.getCompanyName())
-                .nip(userDto.getNip())
                 .contact(userDto.getContact())
-                .role(userDto.getRole())
                 .build();
         Address address = Address.builder()
                 .city(userDto.getCity())
