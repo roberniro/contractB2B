@@ -24,12 +24,14 @@ public class UserInfoServiceImpl implements UserInfoService{
         return ResponseEntity.badRequest().body("User not found");
     }
 
-    private static UserDto getResponseUserDto(User user) {
+    private UserDto getResponseUserDto(User user) {
         UserDto responseUserDto = UserDto.builder()
                 .username(user.getUsername())
-                .companyName(user.getCompanyName())
+                .companyName(user.getName())
                 .nip(user.getNip())
-                .address(user.getAddress())
+                .city(user.getAddress().getCity())
+                .district(user.getAddress().getDistrict())
+                .addressDetail(user.getAddress().getAddressDetail())
                 .contact(user.getContact())
                 .role(user.getRole())
                 .build();

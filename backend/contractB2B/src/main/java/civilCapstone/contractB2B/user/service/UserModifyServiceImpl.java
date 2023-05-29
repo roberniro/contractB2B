@@ -1,5 +1,6 @@
 package civilCapstone.contractB2B.user.service;
 
+import civilCapstone.contractB2B.global.entity.Address;
 import civilCapstone.contractB2B.global.model.ResponseDto;
 import civilCapstone.contractB2B.user.model.UserDto;
 import civilCapstone.contractB2B.user.repository.UserRepository;
@@ -39,12 +40,17 @@ public class UserModifyServiceImpl implements UserModifyService {
                 .id(id)
                 .username(username)
                 .password(encoder.encode(userDto.getPassword()))
-                .companyName(userDto.getCompanyName())
+                .name(userDto.getCompanyName())
                 .nip(userDto.getNip())
-                .address(userDto.getAddress())
                 .contact(userDto.getContact())
                 .role(userDto.getRole())
                 .build();
+        Address address = Address.builder()
+                .city(userDto.getCity())
+                .district(userDto.getDistrict())
+                .addressDetail(userDto.getAddressDetail())
+                .build();
+        user.setAddress(address);
         User modifiedUser;
         try {
             modifiedUser = modify(user);
@@ -57,21 +63,23 @@ public class UserModifyServiceImpl implements UserModifyService {
         return ResponseEntity.ok().body(responseUserDto);
     }
 
-    private static ResponseDto getResponseErrorDto(Exception e) {
+    private ResponseDto getResponseErrorDto(Exception e) {
         Map<String, String> modifyResult = new HashMap<>();
         modifyResult.put("valid_modify", e.getMessage());
         ResponseDto responseDto = ResponseDto.builder().error(modifyResult).build();
         return responseDto;
     }
 
-    private static UserDto getResponseUserDto(User registerdUser, String token) {
+    private UserDto getResponseUserDto(User registerdUser, String token) {
         UserDto responseDto = new UserDto().builder()
                 .token(token)
                 .id(registerdUser.getId())
                 .username(registerdUser.getUsername())
-                .companyName(registerdUser.getCompanyName())
+                .companyName(registerdUser.getName())
                 .nip(registerdUser.getNip())
-                .address(registerdUser.getAddress())
+                .city(registerdUser.getAddress().getCity())
+                .district(registerdUser.getAddress().getDistrict())
+                .addressDetail(registerdUser.getAddress().getAddressDetail())
                 .contact(registerdUser.getContact())
                 .role(registerdUser.getRole())
                 .build();

@@ -42,21 +42,23 @@ public class UserLoginServiceImpl implements UserLoginService{
     }
 
 
-    private static ResponseDto getResponseErrorDto(String message) { // 에러 메시지를 담은 dto 생성
+    private ResponseDto getResponseErrorDto(String message) { // 에러 메시지를 담은 dto 생성
         Map<String, String> loginResult = new HashMap<>();
         loginResult.put("valid_login", message);
         ResponseDto responseDto = ResponseDto.builder().error(loginResult).build();
         return responseDto;
     }
 
-    private static UserDto getResponseUserDto(UserDto userDto, User user, String token) { // 유저 정보를 담은 dto 생성
+    private UserDto getResponseUserDto(UserDto userDto, User user, String token) { // 유저 정보를 담은 dto 생성
         final UserDto responseUserDto = userDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .token(token)
-                .companyName(user.getCompanyName())
+                .companyName(user.getName())
                 .nip(user.getNip())
-                .address(user.getAddress())
+                .city(user.getAddress().getCity())
+                .district(user.getAddress().getDistrict())
+                .addressDetail(user.getAddress().getAddressDetail())
                 .contact(user.getContact())
                 .role(user.getRole())
                 .build();

@@ -1,5 +1,6 @@
 package civilCapstone.contractB2B.user.service;
 
+import civilCapstone.contractB2B.global.entity.Address;
 import civilCapstone.contractB2B.global.model.ResponseDto;
 import civilCapstone.contractB2B.user.model.UserDto;
 import civilCapstone.contractB2B.user.entity.User;
@@ -30,12 +31,17 @@ public class UserJoinServiceImpl implements UserJoinService{
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(encoder.encode(userDto.getPassword()))
-                .companyName(userDto.getCompanyName())
+                .name(userDto.getCompanyName())
                 .nip(userDto.getNip())
-                .address(userDto.getAddress())
                 .contact(userDto.getContact())
                 .role(userDto.getRole())
                 .build(); // UserDto -> User
+        Address address = Address.builder()
+                .city(userDto.getCity())
+                .district(userDto.getDistrict())
+                .addressDetail(userDto.getAddressDetail())
+                .build(); // UserDto -> Address
+        user.setAddress(address); // User에 Address 추가
         User registerdUser; // 회원가입 처리 후 결과를 받음
         // 회원가입 처리
         try {
@@ -50,24 +56,26 @@ public class UserJoinServiceImpl implements UserJoinService{
         return ResponseEntity.ok().body(responseUserDto);
     }
 
-    private static ResponseDto getResponseErrorDto(IllegalArgumentException e) {
+    private ResponseDto getResponseErrorDto(IllegalArgumentException e) {
         Map<String, String> joinResult = new HashMap<>();
         joinResult.put("valid_join", e.getMessage());
         ResponseDto responseDto = ResponseDto.builder().error(joinResult).build();
         return responseDto;
     }
 
-    private static UserDto getResponseUserDto(User registerdUser) {
-        UserDto responseDto = new UserDto().builder()
-                .id(registerdUser.getId())
-                .username(registerdUser.getUsername())
-                .companyName(registerdUser.getCompanyName())
-                .nip(registerdUser.getNip())
-                .address(registerdUser.getAddress())
-                .contact(registerdUser.getContact())
-                .role(registerdUser.getRole())
+    private UserDto getResponseUserDto(User user) {
+        UserDto responseUserDto = UserDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .companyName(user.getName())
+                .nip(user.getNip())
+                .city(user.getAddress().getCity())
+                .district(user.getAddress().getDistrict())
+                .addressDetail(user.getAddress().getAddressDetail())
+                .contact(user.getContact())
+                .role(user.getRole())
                 .build();
-        return responseDto;
+        return responseUserDto;
     }
 
     // 유효성 검사
