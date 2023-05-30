@@ -1,5 +1,7 @@
 package civilCapstone.contractB2B.user.service;
 
+import civilCapstone.contractB2B.contractor.entity.Contractor;
+import civilCapstone.contractB2B.contractor.repository.ContractorRepository;
 import civilCapstone.contractB2B.global.entity.Address;
 import civilCapstone.contractB2B.global.model.ResponseDto;
 import civilCapstone.contractB2B.user.entity.Role;
@@ -24,6 +26,8 @@ import java.util.Map;
 public class UserJoinServiceImpl implements UserJoinService{
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ContractorRepository contractorRepository;
 
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -61,6 +65,12 @@ public class UserJoinServiceImpl implements UserJoinService{
             // 회원가입 실패 시, 예외 메시지를 받아서 ResponseDto에 담아 반환
             ResponseDto responseErrorDto = getResponseErrorDto(e);
             return ResponseEntity.badRequest().body(responseErrorDto);
+        }
+        if(registerdUser.getRole() == Role.CONTRACTOR) {
+            Contractor contractor = Contractor.builder()
+                    .contractor(registerdUser)
+                    .build();
+            contractorRepository.save(contractor);
         }
         // 회원가입 성공 시, 회원 정보를 받아서 ResponseDto에 담아 반환
         UserDto responseUserDto = getResponseUserDto(registerdUser);
