@@ -1,24 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Table, FormGroup } from "react-bootstrap";
+import ContractorModal from "../Modal/ContractorModal";
 
 const NewEstimate = () => {
-  const [companies, setCompanies] = useState([
-    {
-      companyName: "Company 1",
-      address: "Address 1",
-      phoneNumber: "1234567890"
-    },
-    {
-      companyName: "Company 2",
-      address: "Address 2",
-      phoneNumber: "9876543210"
-    }
-  ]);
-
+  const [companies, setCompanies] = useState([]);
+  const [showContractorModal, setShowContractorModal] = useState(false);
+  const [showEstimateModal, setShowEstimateModal] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState(null);
   const [filteredCompanies, setFilteredCompanies] = useState(companies);
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
-  const [trade, setTrade] = useState("");
+  const [field, setFiled] = useState("");
   const getDistrictOptions = () => {
     if (city === "서울시") {
       return [
@@ -87,16 +79,54 @@ const NewEstimate = () => {
     }
   };
 
+  const handleShowContractorModal = (company) => {
+    setSelectedCompany(company);
+    setShowContractorModal(true);
+  };
+
+  const handleShowEstimateModal = (company) => {
+    setSelectedCompany(company);
+    setShowEstimateModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowContractorModal(false);
+    setShowContractorModal(false);
+  };
+
+  const getContractors = () => {
+    fetch("http://localhost:8080/client/contractor", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setCompanies(res.getContractors);
+        setFilteredCompanies(res.getContractors);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getContractors();
+  }, []);
+
   const handleCityChange = (e) => {
     setCity(e.target.value);
+    handleFilter();
   };
 
   const handleDistrictChange = (e) => {
     setDistrict(e.target.value);
+    handleFilter();
   };
 
-  const handleTradeChange = (e) => {
-    setTrade(e.target.value);
+  const handleFieldChange = (e) => {
+    setFiled(e.target.value);
+    handleFilter();
   };
 
   const handleFilter = () => {
@@ -104,28 +134,29 @@ const NewEstimate = () => {
 
     if (city) {
       filteredData = filteredData.filter((company) =>
-        company.address.includes(city)
+        company.city.includes(city)
       );
     }
 
     if (district) {
       filteredData = filteredData.filter((company) =>
-        company.address.includes(district)
+        company.district.includes(district)
       );
     }
 
-    if (trade) {
-      filteredData = filteredData.filter((company) =>
-        company.trade.includes(trade)
-      );
+    if (field) {
+      filteredData = filteredData.filter((company) => {
+        let experiences = company.experienceDtoList;
+        for (let i = 0; i < experiences.length; i++) {
+          if (experiences[i].field === field) {
+            return true;
+          }
+        }
+        return false;
+      });
     }
 
     setFilteredCompanies(filteredData);
-  };
-
-  const handleSendEstimate = (companyName) => {
-    // Handle sending estimate for the selected company
-    console.log(`Sending estimate for ${companyName}`);
   };
 
   return (
@@ -153,35 +184,55 @@ const NewEstimate = () => {
           </Form.Control>
         </FormGroup>
         <FormGroup style={{ marginRight: "20px", width: "10%" }}>
-          <Form.Control as="select" value={trade} onChange={handleTradeChange}>
+          <Form.Control as="select" value={field} onChange={handleFieldChange}>
             <option value="">공종</option>
-            <option value="Construction">건설</option>
-            <option value="Electrical">전기</option>
-            <option value="Plumbing">배관</option>
+            <option value="라이닝">숏크리트</option>
+            <option value="라이닝">록볼트</option>
+            <option value="라이닝">라이닝</option>
             {/* Add more options as needed */}
           </Form.Control>
         </FormGroup>
       </div>
-      <Table striped bordered hover style={{ textAlign: "center" }}>
+      <Table
+        striped
+        bordered
+        hover
+        style={{ textAlign: "center", tableLayout: "fixed" }}
+      >
+        <colgroup>
+          <col style={{ width: "20%" }} />
+          <col style={{ width: "30%" }} />
+          <col style={{ width: "30%" }} />
+          <col style={{ width: "20%" }} />
+        </colgroup>
         <thead>
           <tr>
             <th>업체명</th>
             <th>상세주소</th>
             <th>전화번호</th>
-            <th>견적발송</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          {filteredCompanies.map((company) => (
-            <tr key={company.companyName}>
-              <td>{company.companyName}</td>
-              <td>{company.address}</td>
-              <td>{company.phoneNumber}</td>
-              <td>
+          {filteredCompanies.map((company, index) => (
+            <tr key={index}>
+              <td style={{ verticalAlign: "middle" }}>{company.name}</td>
+              <td style={{ verticalAlign: "middle" }}>
+                {company.addressDetail}
+              </td>
+              <td style={{ verticalAlign: "middle" }}>{company.contact}</td>
+              <td style={{ verticalAlign: "middle" }}>
                 <Button
                   variant="secondary"
-                  size="sm" // Set the button size to "sm" for small
-                  onClick={() => handleSendEstimate(company.companyName)}
+                  size="sm"
+                  onClick={() => handleShowContractorModal(company)}
+                >
+                  업체 정보
+                </Button>
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={() => handleShowEstimateModal(company)}
                 >
                   견적 발송
                 </Button>
@@ -190,6 +241,13 @@ const NewEstimate = () => {
           ))}
         </tbody>
       </Table>
+      {selectedCompany && (
+        <ContractorModal
+          company={selectedCompany}
+          showModal={showContractorModal}
+          handleCloseModal={handleCloseModal}
+        />
+      )}
     </Container>
   );
 };
