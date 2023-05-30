@@ -77,15 +77,14 @@ const Login = () => {
             required
           />
         </Form.Group>
-
-        <Button variant="primary" type="submit">
-          로그인
-        </Button>
         <Link to="/join">
           <Button variant="secondary" type="button">
             회원가입
           </Button>
         </Link>
+        <Button variant="success" type="button" onClick={handleLogin}>
+          로그인
+        </Button>
       </Form>
     </div>
   );

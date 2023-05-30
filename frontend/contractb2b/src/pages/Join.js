@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -15,6 +15,14 @@ const Join = () => {
   const [addressDetail, setAddressDetail] = useState("");
   const [role, setRole] = useState("");
   const navigate = useNavigate();
+
+  const [isSignUpSuccess, setIsSignUpSuccess] = useState(false);
+
+  useEffect(() => {
+    if (isSignUpSuccess) {
+      navigate("/login");
+    }
+  }, [isSignUpSuccess, navigate]);
 
   const checkNull = () => {
     if (username === "" || password === "" || name === "") {
@@ -65,24 +73,21 @@ const Join = () => {
               role
             }
       )
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("회원가입이 완료되었습니다.");
-          navigate("/login");
-        } else {
-          response.json().then((data) => {
-            let errorMessage = "";
-            for (const key in data.error) {
-              errorMessage += data.error[key] + "\n";
-            }
-            alert(errorMessage || response.statusText);
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    }).then((response) => {
+      if (response.ok) {
+        window.alert("회원가입이 완료되었습니다.");
+        setIsSignUpSuccess(true);
+        return response.json();
+      } else {
+        response.json().then((data) => {
+          let errorMessage = "";
+          for (const key in data.error) {
+            errorMessage += data.error[key] + "\n";
+          }
+          alert(errorMessage || response.statusText);
+        });
+      }
+    });
   };
 
   const handleUsernameChange = (e) => {
@@ -299,7 +304,7 @@ const Join = () => {
             </>
           )}
 
-          <Button variant="primary" type="submit" block>
+          <Button variant="success" type="button" onClick={handleJoin} block>
             회원가입
           </Button>
         </Form>
