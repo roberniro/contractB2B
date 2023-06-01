@@ -39,19 +39,8 @@ public class ClientEstimateService {
     private ContractorRepository contractorRepository;
     @Autowired
     private ExperienceRepository experienceRepository;
-
     @Autowired
     private RatingRepository ratingRepository;
-
-    @Transactional(readOnly = true)
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-        return validatorResult;
-    }
 
     public ResponseEntity createEstimate(String username, EstimateDto.EstimateRequestDto estimateDto) {
         if (userRepository.findByUsername(username).get().getRole() != Role.CLIENT) {
@@ -83,7 +72,7 @@ public class ClientEstimateService {
         return ResponseEntity.ok().body(Collections.singletonMap("create_estimate", estimateResponseDto));
     }
 
-    public ResponseEntity createChildEstimate(String username, String motherId, EstimateDto.EstimateRequestDto estimateDto) {
+    public ResponseEntity createChildEstimate(String username, String motherId, EstimateDto.ChildEstimateRequestDto estimateDto) {
         if (userRepository.findByUsername(username).get().getRole() != Role.CLIENT) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("create_child_estimate", "사용자가 클라이언트가 아닙니다")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
@@ -119,12 +108,12 @@ public class ClientEstimateService {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("get_estimate", "사용자가 클라이언트가 아닙니다")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
-        if (!estimateRepository.existsByClient_Id(userRepository.findByUsername(username).get().getId())) {
+        if (!estimateRepository.existsByClient(userRepository.findByUsername(username).get())) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("get_estimate", "견적이 존재하지 않습니다.")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
         List<EstimateDto> estimates = new ArrayList<>();
-        for (Estimate estimate : estimateRepository.findAllByClient_Id(userRepository.findByUsername(username).get().getId())) {
+        for (Estimate estimate : estimateRepository.findAllByClient(userRepository.findByUsername(username).get())) {
             EstimateDto estimateResponseDto = getEstimateGetDto(estimate);
             estimates.add(estimateResponseDto);
         }
@@ -136,12 +125,12 @@ public class ClientEstimateService {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("get_mother_estimate", "사용자가 클라이언트가 아닙니다")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
-        if (!estimateRepository.existsByClient_Id(userRepository.findByUsername(username).get().getId())) {
+        if (!estimateRepository.existsByClient(userRepository.findByUsername(username).get())) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("get_mother_estimate", "견적이 존재하지 않습니다.")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
         List<EstimateDto> estimates = new ArrayList<>();
-        for (Estimate estimate : estimateRepository.findAllByClient_Id(userRepository.findByUsername(username).get().getId())) {
+        for (Estimate estimate : estimateRepository.findAllByClient(userRepository.findByUsername(username).get())) {
             if (estimate.getMotherId() == null) {
                 EstimateDto estimateResponseDto = getEstimateGetDto(estimate);
                 estimates.add(estimateResponseDto);
@@ -160,7 +149,7 @@ public class ClientEstimateService {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("get_child_estimate", "하위 견적이 존재하지 않습니다.")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
-        for (Estimate estimate : estimateRepository.findAllByClient_Id(userRepository.findByUsername(username).get().getId())) {
+        for (Estimate estimate : estimateRepository.findAllByClient(userRepository.findByUsername(username).get())) {
             if (estimate.getMotherId().equals(motherId)) {
                 EstimateDto estimateResponseDto = getEstimateGetDto(estimate);
                 estimates.add(estimateResponseDto);

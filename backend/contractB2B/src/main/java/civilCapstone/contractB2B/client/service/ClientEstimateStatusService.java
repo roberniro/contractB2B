@@ -1,5 +1,6 @@
 package civilCapstone.contractB2B.client.service;
 
+import civilCapstone.contractB2B.contractor.model.ReasonDto;
 import civilCapstone.contractB2B.global.entity.Address;
 import civilCapstone.contractB2B.global.entity.Construction;
 import civilCapstone.contractB2B.global.entity.ConstructionStatus;
@@ -29,7 +30,7 @@ public class ClientEstimateStatusService {
     @Autowired
     private ConstructionRepository constructionRepository;
 
-    public ResponseEntity acceptEstimate(String username, String estimateId, EstimateDto.EstimateRequestDto estimateRequestDto) {
+    public ResponseEntity acceptEstimate(String username, String estimateId, ReasonDto reasonDto) {
         if (userRepository.findByUsername(username).get().getRole() != Role.CLIENT) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("create_estimate", "사용자가 클라이언트가 아닙니다")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
@@ -45,7 +46,7 @@ public class ClientEstimateStatusService {
         }
         estimate.setEstimateStatus(ACCEPTED);
         estimateRepository.save(estimate);
-        Construction construction = estimateToConstruction(estimate, estimateRequestDto);
+        Construction construction = estimateToConstruction(estimate, reasonDto);
         constructionRepository.save(construction);
         EstimateDto estimateStatusResponseDto = getEstimateStatusDto(estimate);
         return ResponseEntity.ok().body(estimateStatusResponseDto);
@@ -95,7 +96,7 @@ public class ClientEstimateStatusService {
         return estimateResponseDto;
     }
 
-    private Construction estimateToConstruction(Estimate estimate, EstimateDto.EstimateRequestDto estimateRequestDto) {
+    private Construction estimateToConstruction(Estimate estimate, ReasonDto reasonDto) {
         Address constructionAddress = Address.builder().
                 city(estimate.getSite().getCity())
                 .district(estimate.getSite().getDistrict())
@@ -110,7 +111,7 @@ public class ClientEstimateStatusService {
                 .period(estimate.getPeriod())
                 .budget(estimate.getBudget())
                 .contractContent(estimate.getClientContent())
-                .reason(estimateRequestDto.getReason())
+                .reason(reasonDto.getReason())
                 .constructionStatus(ConstructionStatus.WAITING)
                 .build();
         return construction;
