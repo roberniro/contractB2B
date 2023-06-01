@@ -232,7 +232,9 @@ const NewEstimate = () => {
                 {company.city} {company.district} {company.addressDetail}
               </td>
               <td style={{ verticalAlign: "middle" }}>{company.contact}</td>
-              <td style={{ verticalAlign: "middle" }}>{company.rating}</td>
+              <td style={{ verticalAlign: "middle" }}>
+                {Number(company.rating).toFixed(1)}
+              </td>
               <td style={{ verticalAlign: "middle" }}>
                 <Button
                   variant="secondary"
