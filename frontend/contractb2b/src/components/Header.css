@@ -1,0 +1,13 @@
+.header-brand {
+  font-size: 24px;
+  margin-left: 1%;
+}
+
+.header-dropdown {
+  margin: 1%;
+}
+
+.header-user-info,
+.header-logout {
+  margin: 1%;
+}
