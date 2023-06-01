@@ -35,11 +35,7 @@ public class ClientEstimateController {
     }
 
     @PostMapping("/estimate/{motherId}")
-    public ResponseEntity createChildEstimate(@AuthenticationPrincipal String username, @PathVariable String motherId, @RequestBody @Valid EstimateDto.EstimateRequestDto estimateDto, Errors errors) {
-        if (errors.hasErrors()) {
-            ResponseDto responseDto = ResponseDto.builder().error(clientEstimateService.validateHandling(errors)).build();
-            return ResponseEntity.badRequest().body(responseDto);
-        }
+    public ResponseEntity createChildEstimate(@AuthenticationPrincipal String username, @PathVariable String motherId, @RequestBody EstimateDto.EstimateRequestDto estimateDto) {
         return clientEstimateService.createChildEstimate(username, motherId, estimateDto);
     }
 
@@ -59,12 +55,12 @@ public class ClientEstimateController {
     }
 
     @PostMapping("/estimate/{estimateId}/accept")
-    public ResponseEntity acceptEstimate(@AuthenticationPrincipal String username, @PathVariable Long estimateId, @RequestBody EstimateDto.EstimateRequestDto estimateDto) {
+    public ResponseEntity acceptEstimate(@AuthenticationPrincipal String username, @PathVariable String estimateId, @RequestBody EstimateDto.EstimateRequestDto estimateDto) {
         return clientEstimateStatusService.acceptEstimate(username, estimateId, estimateDto);
     }
 
     @DeleteMapping("/estimate/{estimateId}")
-    public ResponseEntity deleteEstimate(@AuthenticationPrincipal String username, @PathVariable Long estimateId) {
+    public ResponseEntity deleteEstimate(@AuthenticationPrincipal String username, @PathVariable String estimateId) {
         return clientEstimateStatusService.deleteEstimate(username, estimateId);
     }
 }
