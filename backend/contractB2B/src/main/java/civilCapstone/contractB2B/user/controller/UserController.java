@@ -1,6 +1,7 @@
 package civilCapstone.contractB2B.user.controller;
 
 import civilCapstone.contractB2B.global.model.ResponseDto;
+import civilCapstone.contractB2B.global.service.Validator;
 import civilCapstone.contractB2B.user.model.UserDto;
 import civilCapstone.contractB2B.user.service.UserJoinService;
 import civilCapstone.contractB2B.user.service.UserLoginService;
@@ -27,13 +28,15 @@ public class UserController {
     private UserInfoService userInfoService;
     @Autowired
     private UserModifyService userModifyService;
+    @Autowired
+    private Validator validator;
 
     @PostMapping
     public ResponseEntity<?> joinUser(@Valid @RequestBody UserDto.UserJoinRequestDto userDto, Errors errors) {
         // 검증 결과 에러가 있으면
         if (errors.hasErrors()) {
             // 에러 메시지를 담은 ResponseDto를 반환
-            ResponseDto responseDto = ResponseDto.builder().error(userJoinService.validateHandling(errors)).build();
+            ResponseDto responseDto = ResponseDto.builder().error(validator.validateHandling(errors)).build();
             return ResponseEntity.badRequest().body(responseDto);
         }
         // 에러가 없으면

@@ -4,6 +4,7 @@ import civilCapstone.contractB2B.contractor.entity.Contractor;
 import civilCapstone.contractB2B.contractor.repository.ContractorRepository;
 import civilCapstone.contractB2B.global.entity.Address;
 import civilCapstone.contractB2B.global.model.ResponseDto;
+import civilCapstone.contractB2B.global.service.Validator;
 import civilCapstone.contractB2B.user.entity.Role;
 import civilCapstone.contractB2B.user.model.UserDto;
 import civilCapstone.contractB2B.user.entity.User;
@@ -106,19 +107,6 @@ public class UserJoinServiceImpl implements UserJoinService{
                 .role(user.getRole())
                 .build();
         return responseUserDto;
-    }
-
-    // 유효성 검사
-    @Transactional(readOnly = true) // 읽기 전용 트랜잭션
-    @Override
-    public Map<String, String> validateHandling(Errors errors) {
-        // 유효성 검사, 중복 검사에 실패한 필드 목록을 받음
-        Map<String, String> validatorResult = new HashMap<>();
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-        return validatorResult;
     }
 
     // 회원가입 처리
