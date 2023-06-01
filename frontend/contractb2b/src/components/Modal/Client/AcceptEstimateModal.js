@@ -19,7 +19,17 @@ const AcceptEstimateModal = ({ estimate, showModal, handleCloseModal }) => {
           alert("견적이 수락되었습니다.");
           handleCloseModal();
         } else {
-          alert("견적 수락에 실패하였습니다.");
+          res.json().then((data) => {
+            if (data.accept_estimate) {
+              alert(data.accept_estimate);
+            } else {
+              let errorMessage = "";
+              for (const key in data.error) {
+                errorMessage += `${data.error[key]}\n`;
+              }
+              alert(errorMessage);
+            }
+          });
         }
       })
       .catch((err) => console.log(err));

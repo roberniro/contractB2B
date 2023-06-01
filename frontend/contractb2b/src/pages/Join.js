@@ -82,7 +82,7 @@ const Join = () => {
         response.json().then((data) => {
           let errorMessage = "";
           for (const key in data.error) {
-            errorMessage += data.error[key] + "\n";
+            errorMessage += `${data.error[key]}\n`;
           }
           alert(errorMessage || response.statusText);
         });

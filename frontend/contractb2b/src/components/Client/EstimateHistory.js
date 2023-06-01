@@ -131,6 +131,8 @@ const EstimateHistory = () => {
         } else {
           res.json().then((data) => {
             alert(data.error.get_estimate);
+            setEstimates([]);
+            setFilteredEstimates([]);
           });
         }
       })
@@ -347,9 +349,8 @@ const EstimateHistory = () => {
                   //   </Button>
                   // ) :
                   <Button
-                    variant="secondary"
+                    variant="success"
                     size="xs"
-                    disabled
                     onClick={() => handleShowChildEstimateModal(estimate)}
                     style={{ padding: "2% 0%" }}
                   >

@@ -111,7 +111,17 @@ const EstimateModal = ({ company, showModal, handleCloseModal }) => {
           setClientContent("");
           handleCloseModal();
         } else {
-          alert("견적 발송에 실패하였습니다.");
+          res.json().then((data) => {
+            if (data.create_estimate) {
+              alert(data.error.create_estimate);
+            } else {
+              let errorMessage = "";
+              for (const key in data.error) {
+                errorMessage += `${data.error[key]}\n`;
+              }
+              alert(errorMessage);
+            }
+          });
         }
       })
       .catch((err) => {

@@ -39,7 +39,17 @@ const ChildEstimateModal = ({
           setClientContent("");
           handleCloseModal();
         } else {
-          alert("견적 발송에 실패하였습니다.");
+          res.json().then((data) => {
+            if (data.create_chiled_estimate) {
+              alert(data.create_chiled_estimate);
+            } else {
+              let errorMessage = "";
+              for (const key in data.error) {
+                errorMessage += `${data.error[key]}\n`;
+              }
+              alert(errorMessage);
+            }
+          });
         }
       })
       .catch((err) => {
@@ -50,7 +60,7 @@ const ChildEstimateModal = ({
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
       <Modal.Header closeButton>
-        <Modal.Title>견적 발송</Modal.Title>
+        <Modal.Title>재건적 요청</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -121,7 +131,7 @@ const ChildEstimateModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button variant="success" type="button" onClick={handleSubmit}>
-          재견적 요청
+          재견적 발송
         </Button>
         {/* <Button variant="secondary" onClick={handleCloseModal}>
           닫기
