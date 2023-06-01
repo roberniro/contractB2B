@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import "./Login.css";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoginSuccess, setIsLoginSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
@@ -24,27 +25,48 @@ const Login = () => {
     })
       .then((response) => {
         if (response.ok) {
-          response.json().then((data) => {
-            sessionStorage.setItem("token", data.token);
-            sessionStorage.setItem("name", data.companyName);
-            sessionStorage.setItem("role", data.role);
-            console.log(`token=${sessionStorage.getItem("token")}`);
-          });
-          navigate(`/${sessionStorage.getItem("role").toLowerCase()}`);
+          response
+            .json()
+            .then((data) => {
+              sessionStorage.setItem("token", data.token);
+              sessionStorage.setItem("name", data.companyName);
+              sessionStorage.setItem("role", data.role);
+              console.log(`token=${sessionStorage.getItem("token")}`);
+            })
+            .then(() => {
+              setIsLoginSuccess(true);
+            })
+            .catch((error) => {
+              console.error(error);
+              setIsLoginSuccess(false);
+            });
         } else {
-          response.json().then((data) => {
-            let errorMessage = "";
-            for (const key in data.error) {
-              errorMessage += data.error[key] + "\n";
-            }
-            alert(errorMessage || response.statusText);
-          });
+          response
+            .json()
+            .then((data) => {
+              let errorMessage = "";
+              for (const key in data.error) {
+                errorMessage += data.error[key] + "\n";
+              }
+              alert(errorMessage || response.statusText);
+              setIsLoginSuccess(false);
+            })
+            .catch((error) => {
+              console.error(error);
+              setIsLoginSuccess(false);
+            });
         }
       })
       .catch((error) => {
         console.error(error);
       });
   };
+
+  useEffect(() => {
+    if (isLoginSuccess) {
+      navigate(`/${sessionStorage.getItem("role").toLowerCase()}`);
+    }
+  }, [isLoginSuccess]);
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -56,7 +78,7 @@ const Login = () => {
 
   return (
     <div className="container">
-      <h2>건설용역정보</h2>
+      <h2>건설 INFO</h2>
       <Form onSubmit={handleLogin}>
         <Form.Group controlId="formBasicUsername">
           <Form.Control
