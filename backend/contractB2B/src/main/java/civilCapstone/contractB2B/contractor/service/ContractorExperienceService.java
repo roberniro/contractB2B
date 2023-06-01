@@ -13,10 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -27,6 +28,16 @@ public class ContractorExperienceService {
     private ContractorRepository contractorRepository;
     @Autowired
     private ExperienceRepository experienceRepository;
+
+    @Transactional(readOnly = true)
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+        for (FieldError error : errors.getFieldErrors()) {
+            String validKeyName = String.format("valid_%s", error.getField());
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+        return validatorResult;
+    }
 
     public ResponseEntity getExperience(String username) {
         try {
@@ -50,6 +61,7 @@ public class ContractorExperienceService {
                         .name(experience.getName())
                         .contractorId(experience.getContractor().getId().toString())
                         .contractorName(experience.getContractor().getContractor().getName())
+                        .clientName(experience.getClientName())
                         .field(experience.getField())
                         .site(experience.getSite())
                         .period(experience.getPeriod())
@@ -65,7 +77,7 @@ public class ContractorExperienceService {
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
     }
-    
+
     public ResponseEntity createExperience(String username, ExperienceDto experienceDto) {
         try {
             if (!userRepository.existsByUsername(username)) {
@@ -83,6 +95,7 @@ public class ContractorExperienceService {
             Experience experience = Experience.builder()
                     .name(experienceDto.getName())
                     .contractor(contractor)
+                    .clientName(experienceDto.getClientName())
                     .field(experienceDto.getField())
                     .site(experienceDto.getSite())
                     .period(experienceDto.getPeriod())

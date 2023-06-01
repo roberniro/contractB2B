@@ -25,6 +25,9 @@ public class Experience {
     private Contractor contractor;
 
     @Column(nullable = false)
+    private String clientName;
+
+    @Column(nullable = false)
     private String field;
 
     @Column(nullable = false)
