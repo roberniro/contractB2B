@@ -1,11 +1,14 @@
 package civilCapstone.contractB2B.client.service;
 
 import civilCapstone.contractB2B.contractor.entity.Contractor;
+import civilCapstone.contractB2B.contractor.entity.Rating;
 import civilCapstone.contractB2B.contractor.model.ContractorDto;
 import civilCapstone.contractB2B.contractor.model.ExperienceDto;
 import civilCapstone.contractB2B.contractor.repository.ContractorRepository;
 import civilCapstone.contractB2B.contractor.repository.ExperienceRepository;
+import civilCapstone.contractB2B.contractor.repository.RatingRepository;
 import civilCapstone.contractB2B.global.entity.Estimate;
+import civilCapstone.contractB2B.global.entity.EstimateStatus;
 import civilCapstone.contractB2B.global.model.EstimateDto;
 import civilCapstone.contractB2B.global.repository.EstimateRepository;
 import civilCapstone.contractB2B.global.entity.Address;
@@ -36,6 +39,9 @@ public class ClientEstimateService {
     private ContractorRepository contractorRepository;
     @Autowired
     private ExperienceRepository experienceRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
 
     @Transactional(readOnly = true)
     public Map<String, String> validateHandling(Errors errors) {
@@ -69,6 +75,7 @@ public class ClientEstimateService {
                 .period(estimateDto.getPeriod())
                 .budget(estimateDto.getBudget())
                 .clientContent(estimateDto.getClientContent())
+                .estimateStatus(EstimateStatus.WAITING)
                 .build();
         estimate.setSite(address);
         estimateRepository.save(estimate);
@@ -85,17 +92,23 @@ public class ClientEstimateService {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("create_child_estimate", "견적이 존재하지 않습니다.")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
-        Estimate motherEstimate = estimateRepository.findById(Long.parseLong(estimateDto.getMotherId())).get();
+        Estimate motherEstimate = estimateRepository.findById(Long.parseLong(motherId)).get();
+        Address childAddress = Address.builder()
+                .city(motherEstimate.getSite().getCity())
+                .district(motherEstimate.getSite().getDistrict())
+                .addressDetail(motherEstimate.getSite().getAddressDetail())
+                .build();
         Estimate estimate = Estimate.builder()
                 .name(motherEstimate.getName())
                 .motherId(motherId)
                 .client(motherEstimate.getClient())
                 .contractor(motherEstimate.getContractor())
                 .field(motherEstimate.getField())
-                .site(motherEstimate.getSite())
+                .site(childAddress)
                 .period(estimateDto.getPeriod())
                 .budget(estimateDto.getBudget())
                 .clientContent(estimateDto.getClientContent())
+                .estimateStatus(EstimateStatus.WAITING)
                 .build();
         estimateRepository.save(estimate);
         EstimateDto estimateResponseDto = getEstimateCreateDto(estimate);
@@ -207,11 +220,11 @@ public class ClientEstimateService {
             for (User user : userRepository.findAllByRole(Role.CONTRACTOR)) {
                 Address address = user.getAddress();
                 Contractor contractor = contractorRepository.findByContractor(user);
-                double averageRating = contractor.getRating()
-                        .stream()
-                        .mapToInt(rating -> rating.getRating())
+                List<Rating> ratings = ratingRepository.findAllByContractor(contractor);
+                Double averageRating = ratings.stream()
+                        .mapToInt(Rating::getRating)
                         .average()
-                        .orElse(0);
+                        .orElse(Double.valueOf(0));
                 List<ExperienceDto> experienceDtoList = experienceRepository.findAllByContractor(contractor).stream().map(experience -> ExperienceDto.builder()
                         .id(experience.getId())
                         .contractorId(experience.getContractor().getId().toString())
