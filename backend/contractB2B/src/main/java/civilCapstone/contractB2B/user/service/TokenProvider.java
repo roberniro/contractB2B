@@ -12,13 +12,15 @@ import java.util.Date;
 
 @Slf4j
 @Component
+// 토큰 생성, 유효성 검사를 위한 클래스
 public class TokenProvider {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
+    // 토큰 생성
     public String create(User user) {
         Date now = new Date();
-        Date accessTokenValidity = new Date(now.getTime() + 1000 * 60 * 30);
+        Date accessTokenValidity = new Date(now.getTime() + 1000 * 60 * 60);
         String accessToken = Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .setSubject(user.getUsername())
@@ -30,6 +32,7 @@ public class TokenProvider {
 
     }
 
+    // 토큰 유효성 검사
     public String validateAndGetUsername(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(secretKey)
@@ -38,6 +41,7 @@ public class TokenProvider {
         return claims.getSubject();
     }
 
+    // 토큰 만료 검사
     public boolean validateTimeToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(secretKey)

@@ -8,5 +8,4 @@ import java.util.Map;
 
 public interface UserJoinService {
     public ResponseEntity<?> getResponseEntity(UserDto.UserJoinRequestDto userDto);
-    public Map<String, String> validateHandling(Errors errors);
 }

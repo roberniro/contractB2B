@@ -10,30 +10,31 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Getter
-@Table
+@Table(name = "user")
+// 사용자 엔티티
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long id;
 
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "name", length = 20, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(length = 10, nullable = true)
-    private String nip;
+    @Column(nullable = true)
+    private String nip; // 사업자 등록번호
 
     @JoinColumn(name = "address_id", nullable = true)
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Address address;
 
-    @Column(length = 11, nullable = true)
+    @Column(nullable = true)
     private String contact;
 
     @Enumerated(EnumType.STRING)

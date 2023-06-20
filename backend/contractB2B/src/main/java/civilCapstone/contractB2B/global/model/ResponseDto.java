@@ -12,6 +12,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+// 공통 응답 dto
 public class ResponseDto<T> {
     private Map<String, String> error;
     private List<T> data;

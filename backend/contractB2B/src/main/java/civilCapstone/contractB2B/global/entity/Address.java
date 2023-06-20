@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Getter
-@Table
+@Table(name = "address")
+// 사용자, 견적, 경력 주소 관리 위한 엔티티
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

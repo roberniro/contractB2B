@@ -1,6 +1,7 @@
 package civilCapstone.contractB2B.user.controller;
 
 import civilCapstone.contractB2B.global.model.ResponseDto;
+import civilCapstone.contractB2B.global.service.Validator;
 import civilCapstone.contractB2B.user.model.UserDto;
 import civilCapstone.contractB2B.user.service.UserJoinService;
 import civilCapstone.contractB2B.user.service.UserLoginService;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("user")
+// 회원가입, 로그인, 회원정보 조회, 회원정보 수정 요청 컨트롤러
 public class UserController {
     @Autowired
     private UserJoinService userJoinService;
@@ -27,17 +29,15 @@ public class UserController {
     private UserInfoService userInfoService;
     @Autowired
     private UserModifyService userModifyService;
+    @Autowired
+    private Validator validator;
 
     @PostMapping
     public ResponseEntity<?> joinUser(@Valid @RequestBody UserDto.UserJoinRequestDto userDto, Errors errors) {
-        // 검증 결과 에러가 있으면
         if (errors.hasErrors()) {
-            // 에러 메시지를 담은 ResponseDto를 반환
-            ResponseDto responseDto = ResponseDto.builder().error(userJoinService.validateHandling(errors)).build();
+            ResponseDto responseDto = ResponseDto.builder().error(validator.validateHandling(errors)).build();
             return ResponseEntity.badRequest().body(responseDto);
         }
-        // 에러가 없으면
-        // 회원가입 서비스를 통해 회원가입을 시도하고, 결과를 반환
         return userJoinService.getResponseEntity(userDto);
     }
 

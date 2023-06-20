@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
+// 유저 권한을 enum으로 정의
 public enum Role {
     CLIENT,
     CONTRACTOR,

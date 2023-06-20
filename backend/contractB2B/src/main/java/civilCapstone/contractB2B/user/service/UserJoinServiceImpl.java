@@ -1,7 +1,10 @@
 package civilCapstone.contractB2B.user.service;
 
+import civilCapstone.contractB2B.contractor.entity.Contractor;
+import civilCapstone.contractB2B.contractor.repository.ContractorRepository;
 import civilCapstone.contractB2B.global.entity.Address;
 import civilCapstone.contractB2B.global.model.ResponseDto;
+import civilCapstone.contractB2B.global.service.Validator;
 import civilCapstone.contractB2B.user.entity.Role;
 import civilCapstone.contractB2B.user.model.UserDto;
 import civilCapstone.contractB2B.user.entity.User;
@@ -21,12 +24,16 @@ import java.util.Map;
 
 @Slf4j
 @Service
+// 회원가입을 위한 서비스
 public class UserJoinServiceImpl implements UserJoinService{
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ContractorRepository contractorRepository;
 
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    // 회원가입 처리
     @Override
     public ResponseEntity<?> getResponseEntity(UserDto.UserJoinRequestDto userDto) {
         User user = null;
@@ -62,6 +69,12 @@ public class UserJoinServiceImpl implements UserJoinService{
             ResponseDto responseErrorDto = getResponseErrorDto(e);
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
+        if(registerdUser.getRole() == Role.CONTRACTOR) {
+            Contractor contractor = Contractor.builder()
+                    .contractor(registerdUser)
+                    .build();
+            contractorRepository.save(contractor);
+        }
         // 회원가입 성공 시, 회원 정보를 받아서 ResponseDto에 담아 반환
         UserDto responseUserDto = getResponseUserDto(registerdUser);
         return ResponseEntity.ok().body(responseUserDto);
@@ -96,19 +109,6 @@ public class UserJoinServiceImpl implements UserJoinService{
                 .role(user.getRole())
                 .build();
         return responseUserDto;
-    }
-
-    // 유효성 검사
-    @Transactional(readOnly = true) // 읽기 전용 트랜잭션
-    @Override
-    public Map<String, String> validateHandling(Errors errors) {
-        // 유효성 검사, 중복 검사에 실패한 필드 목록을 받음
-        Map<String, String> validatorResult = new HashMap<>();
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-        return validatorResult;
     }
 
     // 회원가입 처리
