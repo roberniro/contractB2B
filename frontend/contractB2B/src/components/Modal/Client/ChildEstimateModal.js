@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
+// 원청 재견적 요청 모달 컴포넌트
 const ChildEstimateModal = ({
   motherEstimate,
   showModal,
@@ -17,13 +18,14 @@ const ChildEstimateModal = ({
   }, [motherEstimate]);
 
   const handleSubmit = (e) => {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     e.preventDefault();
     const estimateData = {
       period,
       budget,
       clientContent
     };
-    fetch(`http://localhost:8080/client/estimate/${motherEstimate.id}`, {
+    fetch(`${BASE_URL}/client/estimate/${motherEstimate.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
