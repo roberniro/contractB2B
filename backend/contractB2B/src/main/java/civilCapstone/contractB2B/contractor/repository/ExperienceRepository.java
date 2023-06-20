@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+// 하청업체 경력 Repository
 public interface ExperienceRepository extends JpaRepository<Experience, Long> {
     boolean existsByContractor(Contractor contractor);
 

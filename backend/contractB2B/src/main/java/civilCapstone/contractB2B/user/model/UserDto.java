@@ -14,6 +14,7 @@ import javax.validation.constraints.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+// 유저 관련 dto
 public class UserDto {
     private String token;
     private Long id;
@@ -31,6 +32,7 @@ public class UserDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    // 유저 회원가입 요청 dto
     public static class UserJoinRequestDto {
         @NotBlank(message = "아이디를 입력해주세요.")
         @Pattern(regexp = "^[a-z0-9]{2,10}$", message = "아이디는 영어 소문자와 숫자로만 이루어진 2~10자리여야 합니다.")
@@ -74,6 +76,7 @@ public class UserDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    // 유저 회원정보 수정 요청 dto
     public static class UserModifyRequestDto {
         @NotBlank(message = "비밀번호를 입력해주세요.")
         @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")

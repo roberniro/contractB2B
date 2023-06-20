@@ -20,6 +20,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
+// JWT 인증 필터, 토큰 유효성 검사, SecurityContext에 인증 객체 저장
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private TokenProvider tokenProvider;

@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.EnumSet;
 
+// 유저 권한 유효성 검사
 public class RoleValidator implements ConstraintValidator<ValidRole, Role> {
     @Override
     public boolean isValid(Role value, ConstraintValidatorContext context) {

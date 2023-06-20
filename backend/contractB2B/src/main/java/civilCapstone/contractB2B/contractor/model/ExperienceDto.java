@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+// 하청업체 경력 dto
 public class ExperienceDto {
     private Long id;
     private String contractorId;

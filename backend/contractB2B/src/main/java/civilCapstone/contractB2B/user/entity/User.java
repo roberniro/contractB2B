@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Table(name = "user")
+// 사용자 엔티티
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class User {
     private String name;
 
     @Column(nullable = true)
-    private String nip;
+    private String nip; // 사업자 등록번호
 
     @JoinColumn(name = "address_id", nullable = true)
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

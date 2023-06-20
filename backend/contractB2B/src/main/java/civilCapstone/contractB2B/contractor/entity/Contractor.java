@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+// 하청업체 테이블 만들어 role이 하청인 user와 매핑해 하청업체 관련 정보 관리
 public class Contractor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

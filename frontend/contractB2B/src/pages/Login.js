@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
 
+// 로그인 페이지 컴포넌트
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -12,8 +13,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     e.preventDefault();
-    fetch("http://localhost:8080/user/auth", {
+    fetch(`${BASE_URL}/user/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -31,6 +33,7 @@ const Login = () => {
               sessionStorage.setItem("token", data.token);
               sessionStorage.setItem("name", data.companyName);
               sessionStorage.setItem("role", data.role);
+              sessionStorage.setItem("userId", data.id);
               console.log(`token=${sessionStorage.getItem("token")}`);
             })
             .then(() => {

@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+// 하청업체 선정 이유 dto
 public class ReasonDto {
 
     @NotBlank(message = "업체 선정 이유는 필수 입력 값입니다.")

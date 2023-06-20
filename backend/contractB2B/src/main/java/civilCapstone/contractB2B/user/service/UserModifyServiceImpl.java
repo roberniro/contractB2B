@@ -21,6 +21,7 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
+// 회원 정보 수정을 위한 서비스
 public class UserModifyServiceImpl implements UserModifyService {
 
     @Autowired
@@ -29,6 +30,7 @@ public class UserModifyServiceImpl implements UserModifyService {
     private TokenProvider tokenProvider;
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    // 회원 정보 수정
     @Override
     public ResponseEntity<?> getResponseEntity(UserDto.UserModifyRequestDto userDto, String username) {
         long id;
@@ -62,6 +64,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         return ResponseEntity.ok().body(responseUserDto);
     }
 
+    // 에러 메시지 생성
     private ResponseDto getResponseErrorDto(Exception e) {
         Map<String, String> modifyResult = new HashMap<>();
         modifyResult.put("valid_modify", e.getMessage());
@@ -69,6 +72,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         return responseDto;
     }
 
+    // 회원 정보 수정 완료시 응답 dto 생성
     private UserDto getResponseUserDto(User registerdUser, String token) {
         UserDto responseDto = new UserDto().builder()
                 .token(token)

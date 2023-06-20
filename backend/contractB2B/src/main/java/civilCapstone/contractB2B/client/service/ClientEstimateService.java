@@ -7,10 +7,10 @@ import civilCapstone.contractB2B.contractor.model.ExperienceDto;
 import civilCapstone.contractB2B.contractor.repository.ContractorRepository;
 import civilCapstone.contractB2B.contractor.repository.ExperienceRepository;
 import civilCapstone.contractB2B.contractor.repository.RatingRepository;
-import civilCapstone.contractB2B.global.entity.Estimate;
-import civilCapstone.contractB2B.global.entity.EstimateStatus;
-import civilCapstone.contractB2B.global.model.EstimateDto;
-import civilCapstone.contractB2B.global.repository.EstimateRepository;
+import civilCapstone.contractB2B.estimate.entity.Estimate;
+import civilCapstone.contractB2B.estimate.entity.EstimateStatus;
+import civilCapstone.contractB2B.estimate.model.EstimateDto;
+import civilCapstone.contractB2B.estimate.repository.EstimateRepository;
 import civilCapstone.contractB2B.global.entity.Address;
 import civilCapstone.contractB2B.global.model.ResponseDto;
 import civilCapstone.contractB2B.user.entity.Role;
@@ -20,15 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+// 원청 견적 서비스
 public class ClientEstimateService {
 
     @Autowired
@@ -42,6 +40,7 @@ public class ClientEstimateService {
     @Autowired
     private RatingRepository ratingRepository;
 
+    // 원청 견적 생성 요청 처리
     public ResponseEntity createEstimate(String username, EstimateDto.EstimateRequestDto estimateDto) {
         if (userRepository.findByUsername(username).get().getRole() != Role.CLIENT) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("create_estimate", "사용자가 클라이언트가 아닙니다")).build();
@@ -72,7 +71,8 @@ public class ClientEstimateService {
         return ResponseEntity.ok().body(Collections.singletonMap("create_estimate", estimateResponseDto));
     }
 
-    public ResponseEntity createChildEstimate(String username, String motherId, EstimateDto.ChildEstimateRequestDto estimateDto) {
+    // 원청 재견적 생성 요청 처리
+    public ResponseEntity createChildEstimate(String username, String motherId, EstimateDto.ClientChildEstimateRequestDto estimateDto) {
         if (userRepository.findByUsername(username).get().getRole() != Role.CLIENT) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("create_child_estimate", "사용자가 클라이언트가 아닙니다")).build();
             return ResponseEntity.badRequest().body(responseErrorDto);
@@ -103,6 +103,8 @@ public class ClientEstimateService {
         EstimateDto estimateResponseDto = getEstimateCreateDto(estimate);
         return ResponseEntity.ok().body(Collections.singletonMap("create_child_estimate", estimateResponseDto));
     }
+
+    // 원청 견적 조회 요청 처리
     public ResponseEntity getEstimate(String username) {
         if (userRepository.findByUsername(username).get().getRole() != Role.CLIENT) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("get_estimate", "사용자가 클라이언트가 아닙니다")).build();
@@ -120,6 +122,7 @@ public class ClientEstimateService {
         return ResponseEntity.ok().body(Collections.singletonMap("get_estimate", estimates));
     }
 
+    // 원청 원견적 조회 요청 처리
     public ResponseEntity getMotherEstimate(String username) {
         if (userRepository.findByUsername(username).get().getRole() != Role.CLIENT) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("get_mother_estimate", "사용자가 클라이언트가 아닙니다")).build();
@@ -139,6 +142,7 @@ public class ClientEstimateService {
         return ResponseEntity.ok().body(Collections.singletonMap("get_mother_estimate", estimates));
     }
 
+    // 원청 재견적 조회 요청 처리
     public ResponseEntity getChildEstimate(String username, String motherId) {
         if (userRepository.findByUsername(username).get().getRole() != Role.CLIENT) {
             ResponseDto responseErrorDto = ResponseDto.builder().error(Collections.singletonMap("get_child_estimate", "사용자가 클라이언트가 아닙니다")).build();
@@ -158,6 +162,7 @@ public class ClientEstimateService {
         return ResponseEntity.ok().body(Collections.singletonMap("get_child_estimate", estimates));
     }
 
+    // 견적을 견적생성dto로 변환
     private EstimateDto getEstimateCreateDto(Estimate estimate) {
         EstimateDto estimateResponseDto = EstimateDto.builder()
                 .id(estimate.getId())
@@ -176,6 +181,7 @@ public class ClientEstimateService {
         return estimateResponseDto;
     }
 
+    // 견적을 견적조회dto로 변환
     private EstimateDto getEstimateGetDto(Estimate estimate) {
         EstimateDto estimateResponseDto = EstimateDto.builder()
                 .id(estimate.getId())
@@ -195,6 +201,7 @@ public class ClientEstimateService {
         return estimateResponseDto;
     }
 
+    // 하청업체 목록 조회 요청 처리
     public ResponseEntity getContractor(String username) {
         try {
             if (! userRepository.existsByUsername(username)) {

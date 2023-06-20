@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Join.css";
 
+// 회원가입 페이지 컴포넌트
 const Join = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +16,6 @@ const Join = () => {
   const [addressDetail, setAddressDetail] = useState("");
   const [role, setRole] = useState("");
   const navigate = useNavigate();
-
   const [isSignUpSuccess, setIsSignUpSuccess] = useState(false);
 
   useEffect(() => {
@@ -38,12 +38,13 @@ const Join = () => {
   };
 
   const handleJoin = () => {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     if (!checkNull()) {
       alert("필수 값을 입력해 주세요");
       return;
     }
 
-    fetch("http://localhost:8080/user", {
+    fetch(`${BASE_URL}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

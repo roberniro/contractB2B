@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
+// 유효성 검사
 public class Validator {
     @Transactional(readOnly = true)
     public Map<String, String> validateHandling(Errors errors) {

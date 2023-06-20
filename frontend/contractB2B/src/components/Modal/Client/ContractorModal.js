@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, Button, Table } from "react-bootstrap";
 
+// 원청 하청업체 정보 모달 컴포넌트
 const ContractorModal = ({ company, showModal, handleCloseModal }) => {
   return (
     <Modal show={showModal} onHide={handleCloseModal} size="xl">

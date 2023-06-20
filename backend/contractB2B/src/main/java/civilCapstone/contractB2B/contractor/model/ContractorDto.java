@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+// 하청업체 정보 dto
 public class ContractorDto {
     private Long id;
     private String contractorId;

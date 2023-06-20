@@ -14,18 +14,23 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("contractor")
+// 하청업체 경력 관련 기능 컨트롤러
 public class ContractorExperienceController {
     @Autowired
     private ContractorExperienceService contractorExperienceService;
     @Autowired
     private Validator validator;
 
+    // 경력 조회 요청 처리
     @GetMapping("/experience")
     public ResponseEntity getExperience(@AuthenticationPrincipal String username) {
         return contractorExperienceService.getExperience(username);
     }
+
+    // 경력 생성 요청 처리
     @PostMapping("/experience")
     public ResponseEntity createExperience(@AuthenticationPrincipal String username, @Valid @RequestBody ExperienceDto experienceDto, Errors errors) {
+        // 경력 생성 요청 유효성 검사
         if (errors.hasErrors()) {
             ResponseDto responseErrorDto = ResponseDto.builder()
                     .error(validator.validateHandling(errors)).build();

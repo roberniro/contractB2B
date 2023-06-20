@@ -24,6 +24,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
+// 회원가입을 위한 서비스
 public class UserJoinServiceImpl implements UserJoinService{
     @Autowired
     private UserRepository userRepository;
@@ -32,6 +33,7 @@ public class UserJoinServiceImpl implements UserJoinService{
 
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    // 회원가입 처리
     @Override
     public ResponseEntity<?> getResponseEntity(UserDto.UserJoinRequestDto userDto) {
         User user = null;

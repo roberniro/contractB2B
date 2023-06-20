@@ -4,6 +4,7 @@ import UserInfo from "./UserInfo";
 import Logout from "./Logout";
 import "./Header.css";
 
+// 헤더 컴포넌트
 const Header = ({ handleMenuClick, menu }) => {
   const [dropdownTitle, setDropdownTitle] = useState("");
 

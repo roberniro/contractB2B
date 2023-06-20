@@ -12,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Entity
+// 하청업체의 경력사항 엔티티
 public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

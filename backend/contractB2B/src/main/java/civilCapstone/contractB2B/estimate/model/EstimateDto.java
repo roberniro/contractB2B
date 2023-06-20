@@ -1,6 +1,6 @@
-package civilCapstone.contractB2B.global.model;
+package civilCapstone.contractB2B.estimate.model;
 
-import civilCapstone.contractB2B.global.entity.EstimateStatus;
+import civilCapstone.contractB2B.estimate.entity.EstimateStatus;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+// 견적서 dto
 public class EstimateDto {
     private Long id;
     private String name;
@@ -31,6 +32,7 @@ public class EstimateDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    // 견적서 등록 요청 dto
     public static class EstimateRequestDto {
         private String contractorId;
         @NotBlank(message = "공사명은 필수 입력 값입니다.")
@@ -61,14 +63,27 @@ public class EstimateDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ChildEstimateRequestDto {
+    // 하청업체 재견적 요청 dto
+    public static class ContractorChildEstimateRequestDto {
+        @NotBlank(message = "공기는 필수 입력 값입니다.")
+        private String period;
+        @NotBlank(message = "예산은 필수 입력 값입니다.")
+        private String budget;
+        @NotBlank(message = "의뢰내용은 필수 입력 값입니다.")
+        private String contractorContent;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    // 재견적 요청 dto
+    public static class ClientChildEstimateRequestDto {
         @NotBlank(message = "공기는 필수 입력 값입니다.")
         private String period;
         @NotBlank(message = "예산은 필수 입력 값입니다.")
         private String budget;
         @NotBlank(message = "의뢰내용은 필수 입력 값입니다.")
         private String clientContent;
-        private String contractorContent;
-
     }
 }

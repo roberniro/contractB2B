@@ -21,6 +21,7 @@ import java.util.*;
 
 @Service
 @Slf4j
+// 하청업체 경력 관련 서비스
 public class ContractorExperienceService {
     @Autowired
     private UserRepository userRepository;
@@ -29,16 +30,7 @@ public class ContractorExperienceService {
     @Autowired
     private ExperienceRepository experienceRepository;
 
-    @Transactional(readOnly = true)
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
-        return validatorResult;
-    }
-
+    // 하청업체 경력 조회 요청 처리
     public ResponseEntity getExperience(String username) {
         try {
             User user = userRepository.findByUsername(username).get();
@@ -77,6 +69,8 @@ public class ContractorExperienceService {
             return ResponseEntity.badRequest().body(responseErrorDto);
         }
     }
+
+    // 하청업체 경력 등록 요청 처리
 
     public ResponseEntity createExperience(String username, ExperienceDto experienceDto) {
         try {

@@ -17,6 +17,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
+// 로그인을 위한 서비스
 public class UserLoginServiceImpl implements UserLoginService{
     @Autowired
     private UserRepository userRepository;
@@ -25,6 +26,7 @@ public class UserLoginServiceImpl implements UserLoginService{
     // 비밀번호 암호화위한 encoder
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    // 로그인 처리
     public ResponseEntity<?> getResponseEntity(UserDto userDto) {
         User user = authenticateUsername(userDto.getUsername()); // username으로 사용자 찾기
         if (user == null) { // 유저가 없으면 에러

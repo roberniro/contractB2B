@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Map;
 
 @Repository
+// 하청업체 Repository
 public interface ContractorRepository extends JpaRepository<Contractor, Long> {
-    Contractor findByContractorId(Long id);
 
     boolean existsByContractor(User user);
 

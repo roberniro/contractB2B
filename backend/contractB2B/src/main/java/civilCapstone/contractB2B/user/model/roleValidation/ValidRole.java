@@ -12,6 +12,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Retention(RUNTIME)
 @Constraint(validatedBy = RoleValidator.class)
 @Documented
+// 유저 권한 유효성 검사위한 커스텀 어노테이션
 public @interface ValidRole {
     String message() default "권한을 선택해 주세요.";
     Class<?>[] groups() default {};
