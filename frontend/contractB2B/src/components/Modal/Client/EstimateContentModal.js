@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
+// 원청 견적 상세 모달 컴포넌트
 const EstimateContentModal = ({ estimate, showModal, handleCloseModal }) => {
   return (
     <Modal show={showModal} onHide={handleCloseModal}>

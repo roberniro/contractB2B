@@ -4,6 +4,7 @@ import ChildEstimateModal from "../Modal/Client/ChildEstimateModal";
 import EstimateContentModal from "../Modal/Client/EstimateContentModal";
 import AcceptEstimateModal from "../Modal/Client/AcceptEstimateModal";
 
+// 원청 견적 페이지 컴포넌트
 const EstimateHistory = () => {
   const [estimates, setEstimates] = useState([]);
   // const [showEstimateModal, setShowEstimateModal] = useState(false);
@@ -115,7 +116,8 @@ const EstimateHistory = () => {
   };
 
   const getEstimate = () => {
-    fetch("http://localhost:8080/client/estimate", {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    fetch(`${BASE_URL}/client/estimate`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -159,7 +161,8 @@ const EstimateHistory = () => {
   ]);
 
   const handleDeleteEstimate = (estimateId) => {
-    fetch(`http://localhost:8080/client/estimate/${estimateId}`, {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    fetch(`${BASE_URL}client/estimate/${estimateId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -3,6 +3,7 @@ import { Container, Form, Button, Table, FormGroup } from "react-bootstrap";
 import ContractorModal from "../Modal/Client/ContractorModal";
 import EstimateModal from "../Modal/Client/EstimateModal";
 
+// 원청 신규 견적 페이지 컴포넌트
 const NewEstimate = () => {
   const [companies, setCompanies] = useState([]);
   const [showContractorModal, setShowContractorModal] = useState(false);
@@ -97,7 +98,8 @@ const NewEstimate = () => {
   };
 
   const getContractors = () => {
-    fetch("http://localhost:8080/client/contractor", {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    fetch(`${BASE_URL}/client/contractor`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

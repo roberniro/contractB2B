@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import { json } from "react-router-dom";
 
+// 원청 견적 수락 모달 컴포넌트
 const AcceptEstimateModal = ({ estimate, showModal, handleCloseModal }) => {
   const [reason, setReason] = useState("");
 
   const handleAcceptEstimate = () => {
-    fetch(`http://localhost:8080/client/estimate/${estimate.id}/accept`, {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    fetch(`${BASE_URL}/client/estimate/${estimate.id}/accept`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

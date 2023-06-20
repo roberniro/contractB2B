@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
+// 원청 견적 요청 모달 컴포넌트
 const EstimateModal = ({ company, showModal, handleCloseModal }) => {
   const [name, setName] = useState("");
   const [field, setField] = useState("");
@@ -80,6 +81,7 @@ const EstimateModal = ({ company, showModal, handleCloseModal }) => {
   };
 
   const handleSubmit = (e) => {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     e.preventDefault();
     const estimateData = {
       name,
@@ -92,7 +94,7 @@ const EstimateModal = ({ company, showModal, handleCloseModal }) => {
       budget,
       clientContent
     };
-    fetch("http://localhost:8080/client/estimate", {
+    fetch(`${BASE_URL}/client/estimate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
