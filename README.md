@@ -97,11 +97,11 @@
 - Role에 따라 다른 컴포넌트 렌더링
 
 ### 원청 기능
-- 견적 조회: 견적 발송, 수락, 거절, 재견적 요청, Spring Validation 통한 유효성 검증 구현
+- 견적 조회: 견적 발송, 수락, 거절, 재견적 요청, Spring Validation 통한 유효성 검증 구현<br>
 ![image](https://github.com/roberniro/contractB2B/assets/113920417/67416c24-cafe-46fc-bf61-edfc4b54d0c8)
 - 용역 업체 정보 조회<br>
 ![image](https://github.com/roberniro/contractB2B/assets/113920417/151d180e-b567-4dbb-a678-87358439099e)
-- 공사 정보 조회: 공사 상태 변경, 완료 공사 평점 등록, 공사 상태 완료로 변경 후 평점 등록시 하청 업체 경력 자동 등록
+- 공사 정보 조회: 공사 상태 변경, 완료 공사 평점 등록, 공사 상태 완료로 변경 후 평점 등록시 하청 업체 경력 자동 등록<br>
 ![image](https://github.com/roberniro/contractB2B/assets/113920417/e5afe138-8d35-4a66-b0ed-3535a1149d6b)
 ### 하청 기능
 - 견적 조회: 견적 수락, 거절, 재견적, Spring Validation 통한 유효성 검증 구현<br>
